@@ -44,7 +44,7 @@ void run_predication_failure_handling(void);
 struct PBS_Plan* plan_ptr;
 
 extern struct PBS_Plan* get_pbs_plan(void);
-extern void pbs_handle_prediction_failure(struct PBS_Plan*);//renamed in level2
+extern void handle_prediction_failure(struct PBS_Plan*);//renamed in level2
 extern void update_retired_instructions_task(long, struct PBS_Task*);
 
 
@@ -59,7 +59,7 @@ static int dev_open(struct inode *inodep, struct file *filep){
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
     int i;
     for (i = 0; i < 100; i++){
-        pbs_handle_prediction_failure(plan_ptr);
+        handle_prediction_failure(plan_ptr);
     }
   return 0;
 
