@@ -58,11 +58,9 @@ static int dev_open(struct inode *inodep, struct file *filep){
 // --- READ ----
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
     int i;
-    printk(KERN_INFO "[PBS_run]Task 0 has %ld run instructions\n", plan_ptr->tasks[0].instructions_retired_task);
     for (i = 0; i < 100; i++){
         pbs_handle_prediction_failure(plan_ptr);
     }
-    printk(KERN_INFO "[PBS_run] Task 0 has %ld run instructions\n", plan_ptr->tasks[0].instructions_retired_task);
   return 0;
 
 }
@@ -132,7 +130,7 @@ void run_predication_failure_handling(){
     if(print_counter % 10000000 == 0){
         printk(KERN_ALERT "[PBS_run_predication_failure_handling] Called from kernel %ld times\n", print_counter);
     }
-    pbs_handle_prediction_failure(plan_ptr);
+    handle_prediction_failure(plan_ptr);
     print_counter++;
 }
 EXPORT_SYMBOL(run_predication_failure_handling);
