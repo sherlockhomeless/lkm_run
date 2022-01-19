@@ -45,8 +45,7 @@ struct PBS_Plan* plan_ptr;
 
 extern struct PBS_Plan* get_pbs_plan(void);
 extern void handle_prediction_failure(struct PBS_Plan*);//renamed in level2
-extern void update_retired_instructions_task(long, struct PBS_Task*);
-
+extern void pbs_run_timer_tick(struct PBS_Plan*);
 
 // --- OPEN ----
 static int dev_open(struct inode *inodep, struct file *filep){
@@ -130,7 +129,7 @@ void run_predication_failure_handling(){
     if(print_counter % 10000000 == 0){
         printk(KERN_ALERT "[PBS_run_predication_failure_handling] Called from kernel %ld times\n", print_counter);
     }
-    handle_prediction_failure(plan_ptr);
+    pbs_run_timer_tick(plan_ptr);
     print_counter++;
 }
 EXPORT_SYMBOL(run_predication_failure_handling);
