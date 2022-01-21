@@ -145,6 +145,10 @@ void check_correct_setup(void *func_ptr_handle){
 
     printk(KERN_INFO "[PBS_run_module]: plan_ptr: %p, 1st_task: %p, 1st_task_id: %ld, 1st_task_length: %ld", plan_ptr, &plan_ptr->plan_ptr[0], plan_ptr->plan_ptr[0].task_id,  plan_ptr->plan_ptr[0].instructions_planned);
     printk(KERN_INFO "[PBS_run_module]: first != NULL; 1st_task != NULL; 1st_task_id == 0");
+
+    printk(KERN_INFO "[PBS_run_module]: cur_task: %p, cur_process: %p", plan_ptr->cur_task, plan_ptr->cur_process);
+    printk(KERN_INFO "[PBS_run_module]: cur_task != NULL; cur_task != NULL");
+
 }
 
 module_init(init_global_module);
