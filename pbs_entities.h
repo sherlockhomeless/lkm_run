@@ -51,7 +51,7 @@
     long num_processes;
     long num_tasks;
     struct PBS_Process processes[MAX_NUMBER_PROCESSES] ;
-    struct PBS_Task tasks[MAX_NUMBER_TASKS_IN_PLAN];
+    struct PBS_Task plan_ptr[MAX_NUMBER_TASKS_IN_PLAN];
     struct PBS_Task* finished_tasks;
     struct PBS_Process* cur_process;
     struct PBS_Task* cur_task;

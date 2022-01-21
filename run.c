@@ -44,12 +44,12 @@ void run_predication_failure_handling(void);
 struct PBS_Plan* plan_ptr;
 
 extern struct PBS_Plan* get_pbs_plan(void);
-extern void handle_prediction_failure(struct PBS_Plan*);//renamed in level2
+//extern void handle_prediction_failure(struct PBS_Plan*);//renamed in level2
 extern void pbs_run_timer_tick(struct PBS_Plan*);
+void check_correct_setup(void *);
 
 // --- OPEN ----
 static int dev_open(struct inode *inodep, struct file *filep){
-    printk(KERN_ALERT "DEL: PROCESS_POINTER: %p\n", plan_ptr->processes);
    return 0;
 }
 
@@ -57,8 +57,9 @@ static int dev_open(struct inode *inodep, struct file *filep){
 // --- READ ----
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
     int i;
+    printk("[PBS_run_module]: Running 100 timer ticks for plan-based-scheduler");
     for (i = 0; i < 100; i++){
-        handle_prediction_failure(plan_ptr);
+            pbs_run_timer_tick(plan_ptr);
     }
   return 0;
 
@@ -78,9 +79,9 @@ static int dev_release(struct inode *inodep, struct file *filep){
 }
 
 
-
-
 static int __init init_global_module(void){
+    void (*old_func_ptr)(void) = handle_prediction_failure;
+
     // Try to dynamically allocate a major number for the device -- more difficult but worth it
    majorNumber = register_chrdev(0, DEVICE_NAME, &fops);
    if (majorNumber<0){
@@ -108,6 +109,7 @@ static int __init init_global_module(void){
    }
     plan_ptr = get_pbs_plan();
     handle_prediction_failure = &run_predication_failure_handling;
+    check_correct_setup(old_func_ptr);
     return 0;
 }
 
@@ -124,15 +126,26 @@ static void __exit exit_global_module(void){
 }
 
 
-
 void run_predication_failure_handling(){
     if(print_counter % 10000000 == 0){
-        printk(KERN_ALERT "[PBS_run_predication_failure_handling] Called from kernel %ld times\n", print_counter);
+        printk(KERN_INFO "[PBS_run_predication_failure_handling] Called from kernel %ld times\n", print_counter);
     }
     pbs_run_timer_tick(plan_ptr);
     print_counter++;
 }
 EXPORT_SYMBOL(run_predication_failure_handling);
+
+void check_correct_setup(void *func_ptr_handle){
+    // check if pointer was set properly
+    printk(KERN_INFO "[PBS_run_module]: handle_prediction_failure(old): %p, new: %p, run_prediction_failure: %p", func_ptr_handle, handle_prediction_failure, run_predication_failure_handling);
+    printk(KERN_INFO "[PBS_run_module]: first == NULL; second == third");
+
+    printk(KERN_INFO "[PBS_run_module]: pbs_run_timer_tick: %p", pbs_run_timer_tick);
+    printk(KERN_INFO "[PBS_run_module]: should be != NULL");
+
+    printk(KERN_INFO "[PBS_run_module]: plan_ptr: %p, 1st_task: %p, 1st_task_id: %ld, 1st_task_length: %ld", plan_ptr, &plan_ptr->plan_ptr[0], plan_ptr->plan_ptr[0].task_id,  plan_ptr->plan_ptr[0].instructions_planned);
+    printk(KERN_INFO "[PBS_run_module]: first != NULL; 1st_task != NULL; 1st_task_id == 0");
+}
 
 module_init(init_global_module);
 module_exit(exit_global_module);

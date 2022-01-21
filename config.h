@@ -2,7 +2,7 @@
 // TODO: follow commenting pattern from first t2 defintions
 // --- ADMIN STUFF ---
 #define LOG_PBS 0
-#define MAX_NUMBER_PROCESSES 100
+#define MAX_NUMBER_PROCESSES 10
 #define MAX_NUMBER_TASKS_IN_PLAN 400
 #define MAX_LEN_PLAN_STR 20000
 #define ACCURACY 10000
